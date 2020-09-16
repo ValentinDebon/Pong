@@ -517,7 +517,7 @@ pong_parse_args(int argc, char **argv) {
 			.tv_sec = 0,
 			.tv_nsec = 16666666 
 		},
-		.seed = 0,
+		.seed = 0, /* Well, zero is as good as any others */
 	};
 	int c;
 
@@ -552,7 +552,7 @@ pong_parse_args(int argc, char **argv) {
 			if(*endptr != '\0' || seed == 0 || seed > (unsigned)-1) {
 				errx(EXIT_FAILURE, "Invalid seed (expects non-zero raw hexadecimal): %s", optarg);
 			}
-			srandom(args.seed);
+			args.seed = seed;
 		}	break;
 		default:
 			pong_usage(*argv);
@@ -564,14 +564,6 @@ pong_parse_args(int argc, char **argv) {
 		pong_usage(*argv);
 	}
 
-	if(args.seed == 0) {
-#ifdef __APPLE__
-		srandomdev();
-#else
-		srandom(0); /* Well, zero is as good as any others */
-#endif
-	}
-
 	return args;
 }
 
@@ -579,6 +571,8 @@ int
 main(int argc, char **argv) {
 	const struct pong_args args = pong_parse_args(argc, argv);
 	struct pong pong;
+
+	srandom(args.seed);
 
 	pong_init(&pong, &args);
 
