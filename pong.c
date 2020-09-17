@@ -96,23 +96,26 @@ pong_ball_angle(void) {
 
 static void
 pong_reset(struct pong *pong) {
-	pong->running = 1;
-	pong->paused = 1;
-	pong->players_score[PLAYER_1] = 0;
-	pong->players_score[PLAYER_2] = 0;
-	pong->players_position[PLAYER_1] = 0.0;
-	pong->players_position[PLAYER_2] = 0.0;
-	pong->players_speed[PLAYER_1] = 0.0;
-	pong->players_speed[PLAYER_2] = 0.0;
-	pong->ball_position[ABSCISSA] = 0.0;
-	pong->ball_position[ORDINATE] = 0.0;
-	pong->ball_angle = pong_ball_angle();
+	/* Else we could have a locked speed */
+	if(pong->players_speed[PLAYER_1] == 0.0 & pong->players_speed[PLAYER_2] == 0.0) {
+		pong->running = 1;
+		pong->paused = 1;
+		pong->players_score[PLAYER_1] = 0;
+		pong->players_score[PLAYER_2] = 0;
+		pong->players_position[PLAYER_1] = 0.0;
+		pong->players_position[PLAYER_2] = 0.0;
+		pong->ball_position[ABSCISSA] = 0.0;
+		pong->ball_position[ORDINATE] = 0.0;
+		pong->ball_angle = pong_ball_angle();
+	}
 }
 
 static void
 pong_init(struct pong *pong, const struct pong_args *args) {
 
 	/* Game variables */
+	pong->players_speed[PLAYER_1] = 0.0;
+	pong->players_speed[PLAYER_2] = 0.0;
 	pong_reset(pong);
 
 	/* Render variables */
